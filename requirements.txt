@@ -1,0 +1,7 @@
+nltk
+emoji
+polyglot
+sklearn
+pandas
+tabulate
+tweepy==3.8.0

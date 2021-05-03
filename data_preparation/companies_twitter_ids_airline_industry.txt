@@ -1,0 +1,8 @@
+Lufthansa_DE
+TUIflyGermany
+eurowings
+FlySWISS
+RAM_Maroc
+FlyingBrussels
+TUIflyBelgium
+BrusselsAirport
