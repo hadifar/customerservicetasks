@@ -12,7 +12,7 @@ To crawl Twitter conversations for a particular user(s) run the following script
 - `max_page_to_crawl` is the number of pages to crawl per twitter account (default value is inf because we want to download all pages)
 - `api_account` is a configuration file that is required to access twitter API (see `config.py`)
 
-If you run the above script multiple times, it only adds/updates new conversations to existing ones.
+If you run the above script multiple times, it only adds/updates new conversations to existing ones. The above script creates a folder per twitter account and stores necessary metadata alongside with each conversation. 
 
 ## Preprocess 
 
