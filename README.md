@@ -1,4 +1,4 @@
-# A million tweets worth a few points
+# A million tweets are worth a few points
 
 This repository contains the code for the presented paper in NAACL 2021:
 
