@@ -57,7 +57,7 @@ def convert_to_utterance(user_id, convs, all_replies, op, n_candidates=19):
     return utterances
 
 
-def create_utterance_format(user_id, conversations, n_candidates):
+def create_utterance_format(user_id, conversations, n_candidates, utterance_type):
     all_operator_replies = []
     all_client_replies = []
     for convs in conversations:
@@ -67,23 +67,21 @@ def create_utterance_format(user_id, conversations, n_candidates):
             else:
                 all_client_replies.append(tweet)
 
-    # all_utterances = []  # each conversation contains 1 or more utterances which may start by user or operator
+    # each conversation contains 1 or more utterances which may start by user or operator
     all_utterances = []
     for convs in conversations:
-        # if utterance_type == 'operator':
-        #     tmp = convert_to_utterance(user_id, convs, all_operator_replies, operator.eq, n_candidates)
-        # elif utterance_type == 'client':
-        #     tmp = convert_to_utterance(user_id, convs, all_client_replies, operator.ne, n_candidates)
-        # if utterance_type == 'full':
-        tmp1 = convert_to_utterance(user_id, convs, all_operator_replies, operator.eq, n_candidates)
-        tmp2 = convert_to_utterance(user_id, convs, all_client_replies, operator.ne, n_candidates)
-        tmp = tmp1 + tmp2
-
-        # else:
-        #     raise Exception("specify utterance type ...")
+        if utterance_type == 'operator':
+            tmp = convert_to_utterance(user_id, convs, all_operator_replies, operator.eq, n_candidates)
+        elif utterance_type == 'client':
+            tmp = convert_to_utterance(user_id, convs, all_client_replies, operator.ne, n_candidates)
+        elif utterance_type == 'full':
+            tmp1 = convert_to_utterance(user_id, convs, all_operator_replies, operator.eq, n_candidates)
+            tmp2 = convert_to_utterance(user_id, convs, all_client_replies, operator.ne, n_candidates)
+            tmp = tmp1 + tmp2
+        else:
+            raise Exception("specify utterance type ...")
 
         if len(tmp) != 0:
-            # all_utterances.append({"utterances": tmp})
             all_utterances.append(tmp)
 
     # if utterance_type == 'operator':
@@ -93,7 +91,6 @@ def create_utterance_format(user_id, conversations, n_candidates):
     # elif utterance_type == 'full':
     # print("Operator+Client replies", len(all_client_replies) + len(all_operator_replies))
 
-    print(user_id, "total number of utterances ", len(all_utterances))
     return all_utterances
 
 
@@ -115,28 +112,11 @@ def save_to_disk(raw_conversations, file_path, mode, user_id=None, task=None):
     file_name = "{}.json".format(mode) if user_id is None else "{}_{}_{}.json".format(mode, task, user_id)
     with open(os.path.join(file_path, file_name), 'w') as outfile:
         for item in raw_conversations:
-            if user_id is not None:
-                if task == 'AS':
-                    item = item[-1]
-
             outfile.write(json.dumps(item))
             outfile.write('\n')
 
 
-# def add_end_of_conversation_attr(conversations):
-#     for conv in conversations:
-#         for i, tweet in enumerate(conv):
-#             tweet['end_position'] = i
-#             if i == len(conv) - 1:
-#                 tweet['end_of_conversation'] = True
-#             else:
-#                 tweet['end_of_conversation'] = False
-#
-#     return conversations
-
-
 def do_steps(args, mode, user_ids):
-    # file_path = "{}/{}".format(args.dir_path, args.folder_name)
     all_raw = []
 
     for user_id in user_ids:
@@ -147,15 +127,9 @@ def do_steps(args, mode, user_ids):
 
         # sort based on time
         clean_conversations = sort_conversations_by_time(clean_conversations)
-        # add <from_client> <from_operator> token
-        # clean_conversations = add_special_to_conversations(clean_conversations, user_id)
-
-        # utter_type = 'operator' if mode == 'test' else args.utterance_type  # during infernce we only predict operators reply
-
-        # clean_conversations = add_end_of_conversation_attr(clean_conversations)
 
         clean_conversations = create_utterance_format(user_id=user_id,
-                                                      # utterance_type=utter_type,
+                                                      utterance_type=args.utterance_type,
                                                       conversations=clean_conversations,
                                                       n_candidates=5)
 
@@ -165,10 +139,6 @@ def do_steps(args, mode, user_ids):
         # flatten utterances
         all_raw.append(list(chain(*clean_conversations)))
 
-        # if mode == 'test':
-        #     save_to_disk(list(chain(*clean_conversations)), file_path, mode, user_id, "EC")
-        #     save_to_disk(clean_conversations, file_path, mode, user_id, "AS")
-
     save_to_disk(list(chain(*all_raw)), args.dir_path, mode)
 
 
@@ -176,12 +146,12 @@ def main(args):
     user_ids = get_user_ids(args.user_id)
     user_ids = remove_duplicate_user_ids(user_ids)
 
-    train_companies, valid_companies = train_test_split(user_ids, test_size=0.05, random_state=42)
+    # train_companies, valid_companies = train_test_split(user_ids, test_size=0.05, random_state=42)
 
     print('training files...')
-    do_steps(args, 'train', train_companies)
-    print('test files...')
-    do_steps(args, 'test', valid_companies)
+    do_steps(args, 'train', user_ids)
+    # print('test files...')
+    # do_steps(args, 'test', valid_companies)
 
 
 if __name__ == '__main__':
@@ -194,8 +164,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--clean_type', type=str, default='medium', help='level of pre-processing:',
                         choices=['medium', 'hard', 'soft', 'none'])
-    # parser.add_argument('--utterance_type', type=str, default='full', help='include client replies',
-    #                     choices=['full'])
-    # parser.add_argument('--folder_name', type=str, default='dataset')
+    parser.add_argument('--utterance_type', type=str, default='full', help='include client replies',
+                        choices=['full', 'client', 'operator'])
 
     main(parser.parse_args())

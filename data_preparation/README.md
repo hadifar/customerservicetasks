@@ -24,7 +24,7 @@ To execute preprocessing step run the following command:
 
 ## Utterance format
 
-We perform another round of preprocessing and cleaning to obtain suitable format for our model:
+We perform another round of preprocessing and cleaning to obtain suitable utterances. We convert each conversation to 1 or more utterances which may start by user or operator. As a results, you can see overlap between utterances. E.g., you can focus on operator utterances by passing `utterance_type='operator''`
 
 ``python data_preparation/convert_to_utterance_format.py --user_id data_preparation/companies_twitter_ids_test.txt --dir_path data_preparation/corpora``
 
