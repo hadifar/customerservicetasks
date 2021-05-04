@@ -7,7 +7,9 @@ from itertools import chain
 
 from sklearn.model_selection import train_test_split
 
-from utils import clean_utterance_format, LANG_LIST, append_special_token
+from utils import clean_utterance_format
+from utils import LANG_LIST
+from utils import append_special_token
 from utils import detect_utterance_langs
 from utils import get_user_ids
 from utils import remove_duplicate_user_ids
@@ -50,6 +52,8 @@ def convert_to_utterance(user_id, convs, all_replies, op, n_candidates=19):
             else:
                 reply['tweet_lang'] = c
 
+        utterances.append({"candidates": candidates, "history": history, "lang": [reply['tweet_lang']]})
+
     return utterances
 
 
@@ -74,6 +78,7 @@ def create_utterance_format(user_id, conversations, n_candidates):
         tmp1 = convert_to_utterance(user_id, convs, all_operator_replies, operator.eq, n_candidates)
         tmp2 = convert_to_utterance(user_id, convs, all_client_replies, operator.ne, n_candidates)
         tmp = tmp1 + tmp2
+
         # else:
         #     raise Exception("specify utterance type ...")
 
@@ -86,9 +91,9 @@ def create_utterance_format(user_id, conversations, n_candidates):
     # elif utterance_type == 'client':
     #     print("Client replies", len(all_client_replies))
     # elif utterance_type == 'full':
-    print("Operator+Client replies", len(all_client_replies) + len(all_operator_replies))
+    # print("Operator+Client replies", len(all_client_replies) + len(all_operator_replies))
 
-    # print(user_id, "total number of utterances ", len(all_utterances))
+    print(user_id, "total number of utterances ", len(all_utterances))
     return all_utterances
 
 
@@ -106,6 +111,7 @@ def add_special_to_conversations(conversations, user_id):
 
 
 def save_to_disk(raw_conversations, file_path, mode, user_id=None, task=None):
+    print(len(raw_conversations))
     file_name = "{}.json".format(mode) if user_id is None else "{}_{}_{}.json".format(mode, task, user_id)
     with open(os.path.join(file_path, file_name), 'w') as outfile:
         for item in raw_conversations:
@@ -138,9 +144,9 @@ def do_steps(args, mode, user_ids):
         clean_conversations = clean_utterance_format(user_id=user_id,
                                                      dir_path=args.dir_path,
                                                      clean_type=args.clean_type)
+
         # sort based on time
         clean_conversations = sort_conversations_by_time(clean_conversations)
-
         # add <from_client> <from_operator> token
         # clean_conversations = add_special_to_conversations(clean_conversations, user_id)
 
@@ -152,6 +158,10 @@ def do_steps(args, mode, user_ids):
                                                       # utterance_type=utter_type,
                                                       conversations=clean_conversations,
                                                       n_candidates=5)
+
+        print('-' * 50)
+        print(len(clean_conversations))
+
         # flatten utterances
         all_raw.append(list(chain(*clean_conversations)))
 

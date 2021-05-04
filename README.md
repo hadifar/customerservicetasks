@@ -12,6 +12,6 @@ This repository contains the code presented in NAACL 2021:
 
 ## Data preparation
 
-`data_preparation` folder contains scripts for crawling and cleaning Twitter conversations. 
+`data_preparation` folder contains scripts for crawling and cleaning Twitter conversations for more than 100 companies in different sectors which they have enough interactions with their clients. 
 
 ## Evaluation 

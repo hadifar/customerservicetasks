@@ -1,6 +1,8 @@
 nltk
 emoji
 polyglot
+pyICU
+pycld2
 sklearn
 pandas
 tabulate
