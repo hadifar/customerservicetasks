@@ -1,6 +1,6 @@
 # A million tweets worth a few points
 
-This repository contains the code presented in NAACL 2021:
+This repository contains the code for the presented paper in NAACL 2021:
 
 [A Million Tweets Are Worth a Few Points: Tuning Transformers for Customer Service Tasks](https://arxiv.org/pdf/2104.07944.pdf)
 
