@@ -14,4 +14,8 @@ This repository contains the code for the presented paper in NAACL 2021:
 
 `data_preparation` folder contains scripts for crawling and cleaning Twitter conversations for more than 100 companies in different sectors which they have enough interactions with their clients. 
 
+## Data visualization
+
+`visualization` folder contains a script for TSNE visualization in the paper
+
 ## Evaluation 
