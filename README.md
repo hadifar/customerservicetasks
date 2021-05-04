@@ -18,4 +18,7 @@ This repository contains the code for the presented paper in NAACL 2021:
 
 `visualization` folder contains a script for TSNE visualization in the paper
 
+![alt text](https://github.com/hadifar/customerservicetasks/blob/master/visualization/fig_tsne.png)
+
+
 ## Evaluation 
