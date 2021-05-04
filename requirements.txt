@@ -7,3 +7,5 @@ sklearn
 pandas
 tabulate
 tweepy==3.8.0
+matplotlib
+transformers==4.2.2

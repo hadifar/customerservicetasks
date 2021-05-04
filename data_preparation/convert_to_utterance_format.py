@@ -5,14 +5,8 @@ import os
 import random
 from itertools import chain
 
-from sklearn.model_selection import train_test_split
-
-from utils import clean_utterance_format
-from utils import LANG_LIST
-from utils import append_special_token
-from utils import detect_utterance_langs
-from utils import get_user_ids
-from utils import remove_duplicate_user_ids
+from utils import detect_utterance_langs, LANG_LIST, append_special_token, get_user_ids, remove_duplicate_user_ids, \
+    clean_utterance_format
 
 
 def convert_to_utterance(user_id, convs, all_replies, op, n_candidates=19):
