@@ -8,4 +8,4 @@ pandas
 tabulate
 tweepy==3.8.0
 matplotlib
-transformers==4.2.2
+transformers==4.21.3
