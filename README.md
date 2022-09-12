@@ -36,4 +36,13 @@ This repository contains the code for the presented paper in NAACL 2021:
 ![alt text](https://github.com/hadifar/customerservicetasks/blob/master/visualization/fig_tsne.png)
 
 
-## Evaluation 
+## Usage 
+```
+from transformers import AutoTokenizer, AutoModelForMaskedLM
+
+tokenizer = AutoTokenizer.from_pretrained("hadifar/xlm_pretrain")
+
+model = AutoModelForMaskedLM.from_pretrained("hadifar/xlm_pretrain")
+```
+
+
